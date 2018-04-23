@@ -3,9 +3,9 @@ jquery.morelines
 
 What is this?
 -------------
-`.moreLines()` morelines.js is a small jQuery plugin to create a Read More button to expand a long block of text content shrunk by various lines. The overflowing text fades out at the bottom and has a custom "Read More" link. [view a demo][1] on [jsbin.com][1].
+`.moreLines()` morelines.js is a small jQuery plugin to create a Read More button to expand a long block of text content shrunk by various lines. The overflowing text fades out at the bottom and has a custom "Read More" link. [view a demo][1] on [codepen.io][1].
 
-[1]: https://jsbin.com/nakevawiji/edit?html,css,js,output
+[1]: https://codepen.io/tsurule/pen/aGdBzb
 
 
 How do I use it?
