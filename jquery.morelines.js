@@ -1,92 +1,66 @@
-(function ( $ ) {
+(($) => {
+    "use strict";
 
-/* morelines - simple to use, if you need to expand the text by various line - this is it
- *
- * <script>
- *   $(function() {
- *     $('.js-description_readmore').moreLines({
- *       linecount: 2, 
- *       baseclass: 'b-description',
- *       basejsclass: 'js-description',
- *       classspecific: 'readmore',
- *       buttontxtmore: "read more",
- *       buttontxtless: "read less",
- *       animationspeed: 250 
- *     });
- *   });
- * </script>
- * 
- * V.Tsurule
- */
-	$.fn.moreLines = function (options) {
+    $.fn.moreLines = function (options) {
+        
+        const defaults = {
+            linecount: 1,                       // Количество строк, отображаемых по умолчанию
+            baseclass: 'b-morelines_',           // Базовый CSS класс
+            basejsclass: 'js-morelines_',        // Базовый JS класс
+            classspecific: 'section',            // Уникальный класс для стилизации
+            buttontxtmore: "read more",          // Текст для кнопки "читать больше"
+            buttontxtless: "read less",          // Текст для кнопки "читать меньше"
+            animationspeed: 250                  // Скорость анимации в миллисекундах
+        };
 
-	"use strict";
+        const settings = { ...defaults, ...options };
 
-		this.each(function(){
+        const ellipsisClass = `${settings.baseclass}${settings.classspecific}_ellipsis`;
+        const buttonClass = `${settings.baseclass}${settings.classspecific}_button`;
+        const wrapClass = `${settings.baseclass}${settings.classspecific}_wrapper`;
+        const wrapJsClass = `${settings.basejsclass}${settings.classspecific}_wrapper`;
 
-			var element = $(this), 
-				textelement = element.find("p"),
-				baseclass = "b-morelines_",
-				basejsclass = "js-morelines_",
-				currentclass = "section",
-				singleline = parseFloat(element.css("line-height")),
-				auto = 1,
-				fullheight = element.innerHeight(),
-				settings = $.extend({
-					linecount: auto,
-					baseclass: baseclass,
-					basejsclass: basejsclass,
-					classspecific: currentclass,
-					buttontxtmore: "more lines",
-					buttontxtless: "less lines",
-					animationspeed: auto
-				}, options ),
-				
-				ellipsisclass = settings.baseclass+settings.classspecific+"_ellipsis",
-				buttonclass = settings.baseclass+settings.classspecific+"_button",
-				wrapcss = settings.baseclass+settings.classspecific+"_wrapper",
-				wrapjs = settings.basejsclass+settings.classspecific+"_wrapper",
-				wrapper = $("<div>").addClass(wrapcss+ ' ' +wrapjs).css({'max-width': element.css('width')}),
-				linescount = singleline * settings.linecount;
 
-			element.wrap(wrapper);
+        return this.each(function () {
+            const element = $(this);
+            const fullHeight = element.innerHeight();
+            const lineHeight = parseFloat(element.css("line-height"));
+            const maxLinesHeight = lineHeight * settings.linecount;
 
-			if (element.parent().not(wrapjs)) {
+            if (element.parent().hasClass(wrapJsClass) || fullHeight <= maxLinesHeight) return;
 
-				if (fullheight > linescount) {
+            element.wrap(
+                $("<div>")
+                    .addClass(`${wrapClass} ${wrapJsClass}`)
+                    .css({ 'max-width': element.css('width') })
+            );
+            element.addClass(ellipsisClass).css({
+                'min-height': maxLinesHeight,
+                'max-height': maxLinesHeight,
+                'overflow': 'hidden'
+            });
 
-				element.addClass(ellipsisclass).css({'min-height': linescount, 'max-height': linescount, 'overflow': 'hidden'});
+            const moreLinesButton = $("<div>", {
+                class: buttonClass,
+                text: settings.buttontxtmore,
+                click: () => {
+                    element.toggleClass(ellipsisClass);
+                    moreLinesButton.toggleClass(`${buttonClass}_active`);
+                    if (element.hasClass(ellipsisClass)) {
+                        element.animate({ height: maxLinesHeight }, settings.animationspeed, () => {
+                            moreLinesButton.text(settings.buttontxtmore);
+                            element.css('max-height', maxLinesHeight);
+                        });
+                    } else {
+                        element.css('max-height', '').animate({ height: fullHeight }, settings.animationspeed, () => {
+                            moreLinesButton.text(settings.buttontxtless);
+                        });
+                    }
+                }
+            });
 
-				var moreLinesButton = $("<div>", {
-					"class": buttonclass,
-					click: function() {
+            element.after(moreLinesButton);
+        });
+    };
 
-						element.toggleClass(ellipsisclass);
-						$(this).toggleClass(buttonclass+'_active');
-
-						if (element.css('max-height') !== 'none') {
-							element.css({'height': linescount, 'max-height': ''}).animate({height:fullheight}, settings.animationspeed, function () {
-								moreLinesButton.html(settings.buttontxtless);
-							});
-
-						} else {
-							element.animate({height:linescount}, settings.animationspeed, function () {
-								moreLinesButton.html(settings.buttontxtmore);
-								element.css('max-height', linescount);
-							});
-						}
-					},
-
-					html: settings.buttontxtmore
-				});
-
-				element.after(moreLinesButton);
-
-				}
-			}
-		});
-
-		return this;
-	};
-
-}(jQuery));
+})(jQuery);
