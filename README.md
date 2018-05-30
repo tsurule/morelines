@@ -28,7 +28,7 @@ You can customise with the following options:
 		baseclass: 'b-category_page',   	// define your custom first part of class name for your CSS, for example 'b-category_page'
 		basejsclass: 'js-category_page',	// define your custom first part of class name for js manipulation if needed
 		classspecific: '-description',  	// specify you class name, for example '-description' - it will combine with baseclass and transform to 'b-category_page-description'
-		buttontxtmore: "read more",     	// Add you inner text for button
-		buttontxtless: "read less",     	// Add you inner text for button
+		buttontxtmore: "read more",     	// Add your inner text for button
+		buttontxtless: "read less",     	// Add your inner text for button
 		animationspeed: 250             	// Type your custom speed animation, by defaul is 'auto' auto = 1
 	});
